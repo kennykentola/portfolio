@@ -1,0 +1,160 @@
+/* General Styles */
+:root{
+  --color-primary-a0: #ffffff;
+  --color-primary-a5: #d9e6e3;
+  --color-primary-a10: #b4cdc8;
+  --color-primary-a15: #90b4ae;
+  --color-primary-a20: #6c9c94;
+  --color-primary-a25: #46847b;
+  --color-primary-a30: #186d63;
+  --color-primary-a35: #195a52;
+  --color-primary-a40: #184842;
+  --color-primary-a45: #163732;
+  --color-primary-a50: #132724;
+  --color-primary-a55: #0d1715;
+  --color-primary-a100: #000000;}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background-color: #fff;
+  }
+  
+  h1, h2 {
+    font-weight: bold;
+  }
+  
+  /* .home-container{
+    background: rgb(rgb(199, 36, 36), rgb(87, 97, 87), rgb(2, 2, 41));
+  } */
+
+/* .navbar{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+  .logo{
+    color: rebeccapurple;
+  } */
+
+  /* nav start */
+
+  /* Navigation Bar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 50px;
+  background: #fff;
+  /* background: black; */
+  color: white;
+}
+
+/* Logo Section */
+.logo {
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.logo-img {
+  width: 50px; /* Adjust based on your logo size */
+  height: auto;
+  margin-right: 10px;
+}
+
+/* Navigation Links */
+.nav-links {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-links .nav-btn {
+  background: transparent;
+  border: 1px solid white;
+  padding: 8px 15px;
+  border-radius: 20px;
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  transition: all 0.3s ease-in-out;
+}
+
+.nav-links .nav-btn:hover {
+  background: white;
+  color: black;
+}
+
+
+
+  /* nav end */
+  .nav-links{
+
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  .btn {
+    display: inline-block;
+    background: #1A1A2E;
+    color: white;
+    padding: 10px 20px;
+    margin: 10px;
+    text-decoration: none;
+    border-radius: 5px;
+  }
+  
+  .hero {
+    padding: 50px;
+  }
+  
+  .hero-title {
+    font-size: 40px;
+    font-weight: bold;
+  }
+  
+  .hero-image {
+    width: 80%;
+    max-width: 600px;
+    margin: 20px 0;
+  }
+  
+  .hero-subtitle {
+    font-size: 18px;
+    color: gray;
+  }
+  
+  .about, .projects, .testimonials {
+    padding: 50px 20px;
+  }
+
+
+  .highlight {
+    /* background: #FFD700; */
+    padding: 50px;
+  }
+  
+  .testimonial-text {
+    font-size: 18px;
+    font-style: italic;
+    padding: 20px;
+  }
+  
+  .profile-image{
+    max-width: 80%;
+    height: 900px; 
+    border-radius: 5% ;
+    border: 12px solid rgb(226, 70, 70);
+  }
+  
+  footer {
+    padding: 20px;
+    background: rgb(26, 26, 46,0.8);
+    color: white;
+  }
+  
