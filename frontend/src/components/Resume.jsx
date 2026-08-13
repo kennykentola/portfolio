@@ -10,7 +10,7 @@ const Resume = () => {
       <div className="resume-container">
         <div className="resume-header">
           <h2>My <span className="accent">Resume</span></h2>
-          <a href={resumePDF} download className="download-btn">
+          <a href={resumePDF} download="KennyKentola_Resume.pdf" className="download-btn">
             Download PDF
           </a>
         </div>

@@ -7,8 +7,8 @@
   justify-content: space-between;
   gap: 16px;
   padding: 16px 28px;
-  backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 

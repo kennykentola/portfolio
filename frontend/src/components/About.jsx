@@ -56,7 +56,7 @@ const About = () => {
 
           {/* Actions */}
           <div className="about-actions">
-            <a href={resumePDF} download className="about-btn primary">
+            <a href={resumePDF} download="KennyKentola_Resume.pdf" className="about-btn primary">
               Download CV
             </a>
             <a href="tel:+2348163571677" className="about-btn secondary">
