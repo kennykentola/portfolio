@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "../components/HeroSection.css";
 import resumePDF from "../assets/resume12.pdf";
+import { useTheme } from "../context/ThemeContext";
+
 
 const fullIntro = "My Name Is Ademola Peter Kehinde, known as KennyKentola";
 const roles = ["Web Developer", "Software Developer", "UI/UX Designer", "Graphic Designer"];
@@ -9,7 +11,8 @@ const HeroSection = () => {
   const fullText = "My Portfolio, I am a ";
   const [typedText, setTypedText] = useState("Welcome to ");
   const [displayRole, setDisplayRole] = useState(roles[0]);
-  const [menuOpen, setMenuOpen] = useState(false); // Mobile Menu State
+  const [menuOpen, setMenuOpen] = useState(false);
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     let index = 0;
@@ -58,8 +61,19 @@ const HeroSection = () => {
           <span>KENNYKENTOLA</span>
         </div>
 
-        <div className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)}>
-          {menuOpen ? "✖" : "☰"}
+        <div className="nav-right">
+          <button
+            className="theme-toggle"
+            onClick={toggleTheme}
+            aria-label="Toggle dark/light mode"
+            title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+          >
+            {theme === "dark" ? "☀️" : "🌙"}
+          </button>
+
+          <div className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)}>
+            {menuOpen ? "✖" : "☰"}
+          </div>
         </div>
 
         <ul className={`nav-links ${menuOpen ? "show" : ""}`}>
@@ -84,6 +98,20 @@ const HeroSection = () => {
       <h1 className="hero-title">{typedText}</h1>
       <h2 className="hero-subtitle">{displayRole}</h2>
       <p className="hero-intro">{fullIntro}</p>
+
+      {/* Available for Freelance Badge */}
+      <div className="available-badge">
+        <span className="badge-dot"></span>
+        Available for Freelance
+      </div>
+
+      {/* Social Links */}
+      <div className="hero-socials">
+        <a href="https://github.com/kennykentola" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="GitHub">GitHub</a>
+        <a href="https://www.linkedin.com/in/ademola-peter-kehinde-44650a2b9" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="LinkedIn">LinkedIn</a>
+        <a href="https://wa.me/2348163571677" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="WhatsApp">WhatsApp</a>
+      </div>
+
       <a href={resumePDF} download className="btn">Download My Resume</a>
       <div className="scroll-down">↓</div>
    </section>

@@ -7,22 +7,33 @@ import Projects from "./components/Projects";
 import GraphicDesigns from "./components/GraphicDesigns";
 import Admin from "./components/Admin";
 import Footer from "./components/Footer";
+import NotFound from "./components/NotFound";
+import ScrollToTop from "./components/ScrollToTop";
+import Resume from "./components/Resume";
 import { ToastContainer } from "react-toastify";
+import { ThemeProvider } from "./context/ThemeContext";
+import "react-toastify/dist/ReactToastify.css";
+import "./index.css";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/projects" element={<Projects />} />
-        <Route path="/graphic-designs" element={<GraphicDesigns />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/education-experience" element={<EducationExperience />} />
-        <Route path="/admin" element={<Admin />} />
-      </Routes>
-      <Footer />
-      <ToastContainer position="bottom-right" autoClose={2500} hideProgressBar />
-    </Router>
+    <ThemeProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/graphic-designs" element={<GraphicDesigns />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/education-experience" element={<EducationExperience />} />
+          <Route path="/resume" element={<Resume />} />
+          <Route path="/admin" element={<Admin />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+        <Footer />
+        <ScrollToTop />
+        <ToastContainer position="bottom-right" autoClose={2500} hideProgressBar />
+      </Router>
+    </ThemeProvider>
   );
 }
 

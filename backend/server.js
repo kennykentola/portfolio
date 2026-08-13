@@ -2,22 +2,49 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
+const rateLimit = require("express-rate-limit");
 const nodemailer = require("nodemailer");
 const connectDB = require("./config/db");
 const adminRoutes = require("./routes/adminRoutes");
 const messageRoutes = require("./routes/messageRoutes");
 const appointmentRoutes = require("./routes/appointmentRoutes");
+const projectRoutes = require("./routes/projectRoutes");
+const blogRoutes = require("./routes/blogRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 5002;
 
+// ── CORS: only allow known frontend origins ──────────────────────────────────
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://localhost:3001",
+  process.env.FRONTEND_URL, // set this on Render/Railway: https://your-vercel-domain.vercel.app
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: true,
-    methods: ["GET", "POST", "OPTIONS"],
+    origin: (origin, callback) => {
+      // allow server-to-server requests (no origin) and known origins
+      if (!origin || allowedOrigins.some((o) => origin.startsWith(o))) {
+        callback(null, true);
+      } else {
+        callback(new Error(`CORS: origin ${origin} not allowed`));
+      }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
+// ── Rate Limiter: admin login — max 5 attempts per 15 min per IP ─────────────
+const adminLoginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, message: "Too many login attempts. Try again in 15 minutes." },
+});
+
 app.use(express.json({ limit: "1mb" }));
 
 const createTransporter = () =>
@@ -41,7 +68,9 @@ app.get("/api/health", (_req, res) => {
 
 app.use("/api/messages", messageRoutes);
 app.use("/api/appointments", appointmentRoutes);
-app.use("/api/admin", adminRoutes);
+app.use("/api/admin", adminLoginLimiter, adminRoutes);
+app.use("/api/projects", projectRoutes);
+app.use("/api/blog", blogRoutes);
 
 app.post("/api/messages/send-email", async (req, res) => {
   const { name, email, subject, message } = req.body;

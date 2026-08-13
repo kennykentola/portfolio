@@ -76,6 +76,7 @@ router.post("/", async (req, res) => {
       referral,
       appointmentDate,
       appointmentTime,
+      isRead: false,
     });
 
     try {
@@ -99,6 +100,32 @@ router.post("/", async (req, res) => {
   } catch (error) {
     console.error("Save message error:", error);
     res.status(500).json({ success: false, message: "Failed to save the message." });
+  }
+});
+
+// ── DELETE /api/messages/:id — admin only ────────────────────────────────
+router.delete("/:id", requireAdmin, async (req, res) => {
+  try {
+    const msg = await Message.findByIdAndDelete(req.params.id);
+    if (!msg) return res.status(404).json({ success: false, message: "Message not found" });
+    res.json({ success: true, message: "Message deleted" });
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Failed to delete message" });
+  }
+});
+
+// ── PATCH /api/messages/:id/read — admin only (mark as read) ─────────────
+router.patch("/:id/read", requireAdmin, async (req, res) => {
+  try {
+    const msg = await Message.findByIdAndUpdate(
+      req.params.id,
+      { isRead: true },
+      { new: true }
+    );
+    if (!msg) return res.status(404).json({ success: false, message: "Message not found" });
+    res.json({ success: true, message: msg });
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Failed to update message" });
   }
 });
 

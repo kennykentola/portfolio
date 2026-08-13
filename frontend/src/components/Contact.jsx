@@ -1,12 +1,8 @@
-
-
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../components/Contact.css";
 import { getApiBaseUrl } from "../utils/apiBaseUrl";
-
-const API_BASE_URL = getApiBaseUrl();
 
 const initialFormData = {
   name: "",
@@ -21,6 +17,7 @@ const initialFormData = {
 };
 
 const Contact = () => {
+  const API_BASE_URL = getApiBaseUrl();
   const [formData, setFormData] = useState(initialFormData);
 
   const [isLoading, setIsLoading] = useState(false);

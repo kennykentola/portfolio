@@ -5,6 +5,7 @@ import Skills from "./Skills";
 import Projects from "./Projects";
 import EducationExperience from "./EducationExperience";
 import Testimonials from "./Testimonials";
+import Blog from "./Blog";
 import Contact from "./Contact";
 
 
@@ -22,6 +23,7 @@ function Home() {
       <Projects />
       <EducationExperience />
       <Testimonials />
+      <Blog />
       <Contact />
       
       
