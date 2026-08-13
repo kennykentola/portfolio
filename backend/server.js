@@ -18,6 +18,8 @@ const PORT = process.env.PORT || 5002;
 const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:3001",
+  "https://kennykentola.vercel.app",
+  "https://kennykentola.dpdns.org",
   process.env.FRONTEND_URL, // set this on Render/Railway: https://your-vercel-domain.vercel.app
 ].filter(Boolean);
 
