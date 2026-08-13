@@ -10,6 +10,7 @@ const messageRoutes = require("./routes/messageRoutes");
 const appointmentRoutes = require("./routes/appointmentRoutes");
 const projectRoutes = require("./routes/projectRoutes");
 const blogRoutes = require("./routes/blogRoutes");
+const Admin = require("./models/Admin");
 
 const app = express();
 const PORT = process.env.PORT || 5002;
@@ -101,9 +102,30 @@ app.post("/api/messages/send-email", async (req, res) => {
   }
 });
 
+async function seedAdmin() {
+  try {
+    const adminCount = await Admin.countDocuments();
+    if (adminCount === 0) {
+      const username = process.env.ADMIN_USERNAME;
+      const password = process.env.ADMIN_PASSWORD;
+      
+      if (username && password) {
+        const newAdmin = new Admin({ username, password });
+        await newAdmin.save();
+        console.log("🌱 Database seeded with initial Admin from environment variables.");
+      } else {
+        console.warn("⚠️ No ADMIN_USERNAME or ADMIN_PASSWORD in environment. Database not seeded.");
+      }
+    }
+  } catch (err) {
+    console.error("Error seeding admin:", err);
+  }
+}
+
 async function startServer() {
   try {
     await connectDB();
+    await seedAdmin();
     app.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
     });

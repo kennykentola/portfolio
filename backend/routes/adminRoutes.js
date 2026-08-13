@@ -1,11 +1,12 @@
 const express = require("express");
 const { createAdminToken, verifyAdminToken } = require("../utils/adminToken");
+const Admin = require("../models/Admin");
 
 const router = express.Router();
 
 const getTokenSecret = () => process.env.ADMIN_TOKEN_SECRET || process.env.EMAIL_PASS;
 
-router.post("/login", (req, res) => {
+router.post("/login", async (req, res) => {
   const username = typeof req.body.username === "string" ? req.body.username.trim() : "";
   const password = typeof req.body.password === "string" ? req.body.password : "";
 
@@ -13,20 +14,28 @@ router.post("/login", (req, res) => {
     return res.status(400).json({ success: false, message: "Username and password are required." });
   }
 
-  if (
-    username !== process.env.ADMIN_USERNAME ||
-    password !== process.env.ADMIN_PASSWORD
-  ) {
-    return res.status(401).json({ success: false, message: "Invalid credentials." });
-  }
+  try {
+    const admin = await Admin.findOne({ username });
+    if (!admin) {
+      return res.status(401).json({ success: false, message: "Invalid credentials." });
+    }
 
-  const secret = getTokenSecret();
-  if (!secret) {
-    return res.status(500).json({ success: false, message: "Admin token secret is not configured." });
-  }
+    const isMatch = await admin.comparePassword(password);
+    if (!isMatch) {
+      return res.status(401).json({ success: false, message: "Invalid credentials." });
+    }
 
-  const token = createAdminToken({ username }, secret);
-  return res.json({ success: true, token });
+    const secret = getTokenSecret();
+    if (!secret) {
+      return res.status(500).json({ success: false, message: "Admin token secret is not configured." });
+    }
+
+    const token = createAdminToken({ username }, secret);
+    return res.json({ success: true, token });
+  } catch (error) {
+    console.error("Login error:", error);
+    return res.status(500).json({ success: false, message: "Server error during login." });
+  }
 });
 
 router.get("/verify", (req, res) => {
