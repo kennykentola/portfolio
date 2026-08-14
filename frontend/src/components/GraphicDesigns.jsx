@@ -61,6 +61,7 @@ const GraphicDesigns = () => {
           <li><a href="#about" onClick={() => navigate("/")}>About Me</a></li>
           <li><a href="#skills" onClick={() => navigate("/")}>skills</a></li>
           <li><a href="#projects" onClick={() => navigate("/")}>Projects</a></li>
+          <li><a href="/graphic-designs">Graphic Designs</a></li>
           <li><a href="#contact" onClick={() => navigate("/")}>Contact</a></li>
         </ul>
       </nav>

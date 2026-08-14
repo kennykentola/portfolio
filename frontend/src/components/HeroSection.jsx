@@ -81,6 +81,7 @@ const HeroSection = () => {
           <li><a href="#about" onClick={() => setMenuOpen(false)}>About Me</a></li>
           <li><a href="#skills" onClick={() => setMenuOpen(false)}>Skills</a></li>
           <li><a href="#projects" onClick={() => setMenuOpen(false)}>Projects</a></li>
+          <li><a href="/graphic-designs" onClick={() => setMenuOpen(false)}>Graphic Designs</a></li>
           <li><a href="#educationExperience" onClick={() => setMenuOpen(false)}>Education</a></li>
           <li><a href="#testimonials" onClick={() => setMenuOpen(false)}>Testimonials</a></li>
           <li><a href="#contact" className="contact-btn" onClick={() => setMenuOpen(false)}>Contact</a></li>

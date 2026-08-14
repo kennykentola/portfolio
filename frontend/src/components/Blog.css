@@ -122,6 +122,11 @@
   font-size: 0.82rem;
   color: var(--text-muted, #8b949e);
   margin-bottom: 12px;
+  gap: 8px;
+}
+
+.blog-card-meta svg {
+  margin-right: 4px;
 }
 
 .blog-card h3 {

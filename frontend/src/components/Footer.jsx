@@ -26,6 +26,7 @@ const Footer = () => {
               <li><a href="/resume">Resume</a></li>
               <li><a href="#skills">Skills</a></li>
               <li><a href="#projects">Projects</a></li>
+              <li><a href="/graphic-designs">Graphic Designs</a></li>
             </ul>
           </div>
 
@@ -33,7 +34,6 @@ const Footer = () => {
           <div className="footer-links">
             <h3>Resources</h3>
             <ul>
-              <li><a href="/sitemap.xml" target="_blank" rel="noreferrer">Sitemap</a></li>
               <li><a href="#educationExperience">Education</a></li>
               <li><a href="#testimonials">Testimonials</a></li>
               <li><a href="/admin">Admin Panel</a></li>
