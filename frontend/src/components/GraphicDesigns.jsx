@@ -21,7 +21,7 @@ import social12 from "../assets/birthday.png";
 
 import logo1 from "../assets/logo-1.png";
 import logo2 from "../assets/logo-2.png";
-import logo3 from "../assets/kenn.png";
+// import logo3 from "../assets/kenn.png";
 import logo4 from "../assets/logo-4.png";
 import logo5 from "../assets/jannylogo.png";
 
@@ -45,7 +45,7 @@ const STATIC_DESIGNS = [
   { _id: "static-flyer-12", imageUrl: social12, category: "Flyers", altText: "Social Media Flyer 12" },
   { _id: "static-logo-1", imageUrl: logo1, category: "Logo Design", altText: "Logo Design 1" },
   { _id: "static-logo-2", imageUrl: logo2, category: "Logo Design", altText: "Logo Design 2" },
-  { _id: "static-logo-3", imageUrl: logo3, category: "Logo Design", altText: "Logo Design 3" },
+  // { _id: "static-logo-3", imageUrl: logo3, category: "Logo Design", altText: "Logo Design 3" },
   { _id: "static-logo-4", imageUrl: logo4, category: "Logo Design", altText: "Logo Design 4" },
   { _id: "static-logo-5", imageUrl: logo5, category: "Logo Design", altText: "Logo Design 5" },
   { _id: "static-brand-1", imageUrl: brand1, category: "Brand Identity Design", altText: "Brand Identity 1" },
@@ -67,11 +67,12 @@ const GraphicDesigns = () => {
   const [loading, setLoading] = useState(true);
 
   const fetchDesigns = useCallback(async () => {
+    setLoading(true);
     try {
       const res = await fetch(`${getApiBaseUrl()}/api/graphic-designs`);
       const data = await res.json();
       if (data.success && data.designs && data.designs.length > 0) {
-        setDesigns(data.designs);
+        setDesigns([...STATIC_DESIGNS, ...data.designs]);
       } else {
         setDesigns(STATIC_DESIGNS);
       }
