@@ -9,31 +9,26 @@ const educationData = [
     link: "#",
   },
   {
-    institution: "Univesity of ibadan oyo states nigeria",
-    duration: "2020 -  currently/ ibadan, nigeria",
+    institution: "Univesity of Ibadan Oyo States Nigeria",
+    duration: "2020 -  2026/ ibadan, nigeria",
     role: "Bachelor: Computer Science",
-    link: "#",
+    link: "https://ui.edu.ng/",
   },
   {
     institution: "ITeMs univesity IB TRD. ",
     duration: "06.2021 - 08.2023 / Ibadan, Oyo State",
     role: " javascript Tutor Developer",
-    link: "#",
+    link: "https://items.ui.edu.ng/",
   },
  
-  {
-    institution: "the light house, Lagos, ibadan",
-    duration: "08.2024 - currently / Ibadan Oyo,  Nigeria",
-    role: " Computer Eng.",
-    link: "#",
-  },
+
   
 ];
 
 const EducationExperience = () => {
   return (
     <section id="educationExperience" className="education-section">
-      <h2 className="section-title">Education & Experience</h2>
+      <h2 className="section-title">Education & Work Experience</h2>
       <div className="education-container">
         {educationData.map((item, index) => (
           <div key={index} className="education-item">

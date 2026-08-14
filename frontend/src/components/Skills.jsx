@@ -7,10 +7,10 @@ const skillsData = [
     category: "Frontend",
     color: "#61dafb",
     skills: [
-      { name: "React.js", level: 90, icon: "⚛️" },
+      { name: "React.js", level: 75, icon: "⚛️" },
       { name: "HTML / CSS", level: 95, icon: "🌐" },
-      { name: "JavaScript", level: 88, icon: "🟨" },
-      { name: "Next.js", level: 80, icon: "▲" },
+      { name: "JavaScript", level: 70, icon: "🟨" },
+      { name: "Next.js", level: 60, icon: "▲" },
     ],
   },
   {
@@ -20,17 +20,17 @@ const skillsData = [
       { name: "Node.js / Express", level: 85, icon: "🟢" },
       { name: "Python / Django", level: 72, icon: "🐍" },
       { name: "REST API Design", level: 88, icon: "🔌" },
-      { name: "MongoDB", level: 82, icon: "🍃" },
+      { name: "appwrite Database ", level: 80, icon: "🛢️" },
+      { name: "MongoDB", level: 70, icon: "🍃" },
     ],
   },
   {
     category: "Design & Tools",
     color: "#f472b6",
     skills: [
-      { name: "Figma / UI/UX", level: 85, icon: "🎨" },
+      { name: "Figma / UI/UX", level: 80, icon: "🎨" },
       { name: "Graphic Design", level: 90, icon: "✏️" },
-      { name: "WordPress", level: 80, icon: "🔵" },
-      { name: "Git / GitHub", level: 85, icon: "🐙" },
+      { name: "Git / GitHub", level: 75, icon: "🐙" },
     ],
   },
 ];
