@@ -31,6 +31,9 @@ const Admin = () => {
   const [editingProject, setEditingProject] = useState(null);
   const [showBlogForm, setShowBlogForm] = useState(false);
   const [editingBlog, setEditingBlog] = useState(null);
+  const [graphicDesigns, setGraphicDesigns] = useState([]);
+  const [showGraphicForm, setShowGraphicForm] = useState(false);
+  const [editingGraphic, setEditingGraphic] = useState(null);
 
   const API_BASE_URL = getApiBaseUrl();
 
@@ -45,6 +48,7 @@ const Admin = () => {
     setMessages([]);
     setProjects([]);
     setBlogPosts([]);
+    setGraphicDesigns([]);
   }, []);
 
   // ── Fetch messages ──────────────────────────────────────────────────────────
@@ -90,12 +94,26 @@ const Admin = () => {
     }
   }, [API_BASE_URL, authHeaders]);
 
+  const fetchGraphicDesigns = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/graphic-designs/all`, { headers: authHeaders() });
+      const data = await res.json();
+      setGraphicDesigns(data.designs || []);
+    } catch {
+      setError("Could not load graphic designs.");
+    } finally {
+      setLoading(false);
+    }
+  }, [API_BASE_URL, authHeaders]);
+
   useEffect(() => {
     if (!token) return;
     fetchMessages();
     fetchProjects();
     fetchBlogPosts();
-  }, [token, fetchMessages, fetchProjects, fetchBlogPosts]);
+    fetchGraphicDesigns();
+  }, [token, fetchMessages, fetchProjects, fetchBlogPosts, fetchGraphicDesigns]);
 
   // ── Extract appointments from messages ─────────────────────────────────────
   useEffect(() => {
@@ -185,6 +203,21 @@ const Admin = () => {
     }
   };
 
+  // ── Graphic Design actions ───────────────────────────────────────────────────
+  const deleteGraphicDesign = async (id) => {
+    if (!window.confirm("Delete this design?")) return;
+    try {
+      await fetch(`${API_BASE_URL}/api/graphic-designs/${id}`, {
+        method: "DELETE",
+        headers: authHeaders(),
+      });
+      setGraphicDesigns((prev) => prev.filter((d) => d._id !== id));
+      toast.success("Design deleted");
+    } catch {
+      toast.error("Failed to delete design");
+    }
+  };
+
   const unreadCount = messages.filter((m) => !m.isRead).length;
 
   // ── Login Screen ────────────────────────────────────────────────────────────
@@ -224,7 +257,7 @@ const Admin = () => {
       <div className="admin-header">
         <h1>Admin Dashboard</h1>
         <div className="admin-actions">
-          <button className="refresh-btn" onClick={() => { fetchMessages(); fetchProjects(); }}>Refresh</button>
+          <button className="refresh-btn" onClick={() => { fetchMessages(); fetchProjects(); fetchGraphicDesigns(); }}>Refresh</button>
           <button className="logout-btn" onClick={clearSession}>Logout</button>
         </div>
       </div>
@@ -234,6 +267,7 @@ const Admin = () => {
         <TabButton label="Messages" active={tab === "messages"} badge={unreadCount} onClick={() => setTab("messages")} />
         <TabButton label="Projects" active={tab === "projects"} onClick={() => setTab("projects")} />
         <TabButton label="Blog" active={tab === "blog"} onClick={() => setTab("blog")} />
+        <TabButton label="Graphic Designs" active={tab === "graphic-designs"} onClick={() => setTab("graphic-designs")} />
         <TabButton label="Appointments" active={tab === "appointments"} badge={appointments.length} onClick={() => setTab("appointments")} />
       </div>
 
@@ -364,6 +398,56 @@ const Admin = () => {
                     <FaEdit />
                   </button>
                   <button className="icon-btn delete-btn" title="Delete" onClick={() => deleteBlogPost(p._id)}>
+                    <FaTrash />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ── Graphic Designs Tab ── */}
+      {tab === "graphic-designs" && (
+        <div className="admin-tab-content">
+          <div className="tab-actions-row">
+            <button className="refresh-btn" onClick={() => setShowGraphicForm(true)}>
+              <FaPlus /> Add Design
+            </button>
+          </div>
+
+          {showGraphicForm && (
+            <GraphicDesignForm
+              API_BASE_URL={API_BASE_URL}
+              token={token}
+              initial={editingGraphic}
+              onSave={(d) => {
+                if (editingGraphic) {
+                  setGraphicDesigns((prev) => prev.map((x) => x._id === d._id ? d : x));
+                } else {
+                  setGraphicDesigns((prev) => [d, ...prev]);
+                }
+                setShowGraphicForm(false);
+                setEditingGraphic(null);
+              }}
+              onCancel={() => { setShowGraphicForm(false); setEditingGraphic(null); }}
+            />
+          )}
+
+          <div className="projects-admin-list">
+            {graphicDesigns.length === 0 && !loading && <p className="empty-state">No designs yet. Add one above.</p>}
+            {graphicDesigns.map((d) => (
+              <div key={d._id} className="project-admin-card">
+                <div className="proj-info">
+                  <h3>{d.altText || d.category}</h3>
+                  <span className="proj-cat">{d.category}</span>
+                  <a href={d.imageUrl} target="_blank" rel="noopener noreferrer" className="proj-link">↗ View Image</a>
+                </div>
+                <div className="msg-actions">
+                  <button className="icon-btn read-btn" title="Edit" onClick={() => { setEditingGraphic(d); setShowGraphicForm(true); }}>
+                    <FaEdit />
+                  </button>
+                  <button className="icon-btn delete-btn" title="Delete" onClick={() => deleteGraphicDesign(d._id)}>
                     <FaTrash />
                   </button>
                 </div>
@@ -537,6 +621,128 @@ const BlogForm = ({ API_BASE_URL, token, initial, onSave, onCancel }) => {
       </label>
       <div className="form-actions">
         <button type="submit" className="refresh-btn" disabled={saving}>{saving ? "Saving…" : isEdit ? "Update" : "Add Post"}</button>
+        <button type="button" className="logout-btn" onClick={onCancel}>Cancel</button>
+      </div>
+    </form>
+  );
+};
+
+// ── Graphic Design Form ───────────────────────────────────────────────────────
+const EMPTY_GRAPHIC = {
+  imageUrl: "", category: "Flyers", altText: "", order: 0, published: true,
+};
+
+const GraphicDesignForm = ({ API_BASE_URL, token, initial, onSave, onCancel }) => {
+  const [form, setForm] = useState(initial || EMPTY_GRAPHIC);
+  const [saving, setSaving] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState("");
+  const isEdit = !!initial;
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setForm((f) => ({ ...f, [name]: type === "checkbox" ? checked : value }));
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setSelectedFile(file);
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+    } else {
+      setPreviewUrl("");
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSaving(true);
+    try {
+      let resolvedImageUrl = form.imageUrl;
+
+      if (selectedFile) {
+        const formData = new FormData();
+        formData.append("image", selectedFile);
+        const uploadRes = await fetch(`${API_BASE_URL}/api/upload`, {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+          body: formData,
+        });
+        const uploadData = await uploadRes.json();
+        if (!uploadRes.ok || !uploadData.success) throw new Error(uploadData.message || "Upload failed");
+        const baseUrl = getApiBaseUrl();
+        resolvedImageUrl = baseUrl + uploadData.url;
+        setSelectedFile(null);
+        setPreviewUrl("");
+      }
+
+      if (!resolvedImageUrl && !selectedFile) {
+        throw new Error("Please upload an image or provide an image URL.");
+      }
+
+      const payload = {
+        ...form,
+        imageUrl: resolvedImageUrl,
+        order: Number(form.order) || 0,
+      };
+      const url = isEdit
+        ? `${API_BASE_URL}/api/graphic-designs/${initial._id}`
+        : `${API_BASE_URL}/api/graphic-designs`;
+      const method = isEdit ? "PUT" : "POST";
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Save failed");
+      toast.success(isEdit ? "Design updated!" : "Design added!");
+      onSave(data.design);
+    } catch (err) {
+      toast.error(err.message || "Failed to save design");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <form className="project-form" onSubmit={handleSubmit}>
+      <h3>{isEdit ? "Edit Design" : "Add New Design"}</h3>
+      <div className="form-row">
+        <label>Upload Image
+          <input type="file" accept="image/*" onChange={handleFileChange} />
+        </label>
+        <label>Category
+          <select name="category" value={form.category} onChange={handleChange}>
+            <option>Flyers</option><option>Logo Design</option><option>Brand Identity Design</option>
+          </select>
+        </label>
+      </div>
+
+      {previewUrl && (
+        <div className="image-preview">
+          <img src={previewUrl} alt="Preview" className="preview-img" />
+        </div>
+      )}
+
+      <label>Or Image URL (optional — use if not uploading)
+        <input name="imageUrl" value={form.imageUrl} onChange={handleChange} placeholder="https://..." />
+      </label>
+      <label>Alt Text
+        <input name="altText" value={form.altText} onChange={handleChange} placeholder="Description for accessibility" />
+      </label>
+      <div className="form-row">
+        <label>Order
+          <input name="order" type="number" value={form.order} onChange={handleChange} placeholder="0" />
+        </label>
+        <label className="checkbox-label">
+          <input type="checkbox" name="published" checked={form.published} onChange={handleChange} />
+          Published (visible on site)
+        </label>
+      </div>
+      <div className="form-actions">
+        <button type="submit" className="refresh-btn" disabled={saving}>{saving ? "Saving…" : isEdit ? "Update" : "Add Design"}</button>
         <button type="button" className="logout-btn" onClick={onCancel}>Cancel</button>
       </div>
     </form>

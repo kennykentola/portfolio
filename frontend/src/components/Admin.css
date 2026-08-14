@@ -422,6 +422,19 @@
   gap: 14px;
 }
 
+.image-preview {
+  margin: 10px 0;
+  text-align: center;
+}
+
+.image-preview .preview-img {
+  max-width: 120px;
+  max-height: 120px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  object-fit: cover;
+}
+
 .checkbox-label {
   display: flex !important;
   flex-direction: row !important;

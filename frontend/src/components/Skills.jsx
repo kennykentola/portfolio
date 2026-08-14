@@ -17,9 +17,9 @@ const skillsData = [
     category: "Backend",
     color: "#68a063",
     skills: [
-      { name: "Node.js / Express", level: 85, icon: "🟢" },
-      { name: "Python / Django", level: 72, icon: "🐍" },
-      { name: "REST API Design", level: 88, icon: "🔌" },
+      { name: "Node.js / Express", level: 75, icon: "🟢" },
+      { name: "Python / Django", level: 55, icon: "🐍" },
+      { name: "REST API Design", level: 75, icon: "🔌" },
       { name: "appwrite Database ", level: 80, icon: "🛢️" },
       { name: "MongoDB", level: 70, icon: "🍃" },
     ],

@@ -2,6 +2,7 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 const rateLimit = require("express-rate-limit");
 const nodemailer = require("nodemailer");
 const connectDB = require("./config/db");
@@ -10,6 +11,8 @@ const messageRoutes = require("./routes/messageRoutes");
 const appointmentRoutes = require("./routes/appointmentRoutes");
 const projectRoutes = require("./routes/projectRoutes");
 const blogRoutes = require("./routes/blogRoutes");
+const graphicDesignRoutes = require("./routes/graphicDesignRoutes");
+const uploadRoutes = require("./routes/uploadRoutes");
 const Admin = require("./models/Admin");
 const BlogPost = require("./models/BlogPost");
 
@@ -75,6 +78,10 @@ app.use("/api/appointments", appointmentRoutes);
 app.use("/api/admin", adminLoginLimiter, adminRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/blog", blogRoutes);
+app.use("/api/graphic-designs", graphicDesignRoutes);
+app.use("/api/upload", uploadRoutes);
+
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.post("/api/messages/send-email", async (req, res) => {
   const { name, email, subject, message } = req.body;

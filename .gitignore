@@ -21,3 +21,6 @@ frontend/.env.*
 # System files
 .DS_Store
 Thumbs.db
+
+# Uploaded assets (generated at runtime)
+backend/uploads/
