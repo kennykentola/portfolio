@@ -636,7 +636,7 @@ const GraphicDesignForm = ({ API_BASE_URL, token, initial, onSave, onCancel }) =
   const [form, setForm] = useState(initial || EMPTY_GRAPHIC);
   const [saving, setSaving] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState("");
+  const [base64Data, setBase64Data] = useState("");
   const isEdit = !!initial;
 
   const handleChange = (e) => {
@@ -647,11 +647,13 @@ const GraphicDesignForm = ({ API_BASE_URL, token, initial, onSave, onCancel }) =
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setSelectedFile(file);
+    setBase64Data("");
     if (file) {
-      const url = URL.createObjectURL(file);
-      setPreviewUrl(url);
-    } else {
-      setPreviewUrl("");
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        setBase64Data(ev.target.result);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -662,22 +664,11 @@ const GraphicDesignForm = ({ API_BASE_URL, token, initial, onSave, onCancel }) =
       let resolvedImageUrl = form.imageUrl;
 
       if (selectedFile) {
-        const formData = new FormData();
-        formData.append("image", selectedFile);
-        const uploadRes = await fetch(`${API_BASE_URL}/api/upload`, {
-          method: "POST",
-          headers: { Authorization: `Bearer ${token}` },
-          body: formData,
-        });
-        const uploadData = await uploadRes.json();
-        if (!uploadRes.ok || !uploadData.success) throw new Error(uploadData.message || "Upload failed");
-        const baseUrl = getApiBaseUrl();
-        resolvedImageUrl = baseUrl + uploadData.url;
-        setSelectedFile(null);
-        setPreviewUrl("");
+        if (!base64Data) throw new Error("Image is still processing. Please wait and try again.");
+        resolvedImageUrl = base64Data;
       }
 
-      if (!resolvedImageUrl && !selectedFile) {
+      if (!resolvedImageUrl) {
         throw new Error("Please upload an image or provide an image URL.");
       }
 
@@ -711,7 +702,7 @@ const GraphicDesignForm = ({ API_BASE_URL, token, initial, onSave, onCancel }) =
       <h3>{isEdit ? "Edit Design" : "Add New Design"}</h3>
       <div className="form-row">
         <label>Upload Image
-          <input type="file" accept="image/*" onChange={handleFileChange} />
+          <input type="file" accept="image/*" onChange={handleFileChange} disabled={saving} />
         </label>
         <label>Category
           <select name="category" value={form.category} onChange={handleChange}>
@@ -720,9 +711,9 @@ const GraphicDesignForm = ({ API_BASE_URL, token, initial, onSave, onCancel }) =
         </label>
       </div>
 
-      {previewUrl && (
+      {base64Data && (
         <div className="image-preview">
-          <img src={previewUrl} alt="Preview" className="preview-img" />
+          <img src={base64Data} alt="Preview" className="preview-img" />
         </div>
       )}
 

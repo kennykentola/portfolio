@@ -65,6 +65,7 @@ const GraphicDesigns = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [designs, setDesigns] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const fetchDesigns = useCallback(async () => {
     setLoading(true);
@@ -91,6 +92,8 @@ const GraphicDesigns = () => {
     designs.filter((d) => d.category === category);
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
+  const openImage = (design) => setSelectedImage(design);
+  const closeImage = () => setSelectedImage(null);
 
   return (
     <div className="portfolio-container">
@@ -136,12 +139,17 @@ const GraphicDesigns = () => {
                 <h2>{section.label}</h2>
                 <div className="design-grid">
                   {sectionDesigns.map((design) => (
-                    <img
+                    <div
                       key={design._id}
-                      src={design.imageUrl}
-                      alt={design.altText || section.label}
-                      className="graphic-image"
-                    />
+                      className="design-thumbnail"
+                      onClick={() => openImage(design)}
+                    >
+                      <img
+                        src={design.imageUrl}
+                        alt={design.altText || section.label}
+                        className="graphic-image"
+                      />
+                    </div>
                   ))}
                 </div>
               </div>
@@ -163,6 +171,15 @@ const GraphicDesigns = () => {
             </div>
           </div>
         </section>
+      )}
+
+      {selectedImage && (
+        <div className="image-modal-overlay" onClick={closeImage}>
+          <div className="image-modal-content" onClick={(e) => e.stopPropagation()}>
+            <img src={selectedImage.imageUrl} alt={selectedImage.altText || "Design"} className="image-modal-img" />
+            <button className="image-modal-close" onClick={closeImage}>×</button>
+          </div>
+        </div>
       )}
     </div>
   );

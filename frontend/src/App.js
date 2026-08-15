@@ -6,6 +6,8 @@ import EducationExperience from "./components/EducationExperience";
 import Projects from "./components/Projects";
 import GraphicDesigns from "./components/GraphicDesigns";
 import Admin from "./components/Admin";
+import Blog from "./components/Blog";
+import BlogPost from "./components/BlogPost";
 import Footer from "./components/Footer";
 import NotFound from "./components/NotFound";
 import ScrollToTop from "./components/ScrollToTop";
@@ -27,6 +29,8 @@ function App() {
           <Route path="/education-experience" element={<EducationExperience />} />
           <Route path="/resume" element={<Resume />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
