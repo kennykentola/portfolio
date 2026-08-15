@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import { marked } from "marked";
 import "./BlogPost.css";
 import { getApiBaseUrl } from "../utils/apiBaseUrl";
-import { FaCalendar, FaEye, FaArrowLeft } from "react-icons/fa";
+import { FaCalendar, FaEye, FaArrowLeft, FaTimes } from "react-icons/fa";
 
 const BlogPost = () => {
   const { slug } = useParams();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const contentRef = useRef(null);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -30,6 +32,22 @@ const BlogPost = () => {
     };
     if (slug) fetchPost();
   }, [slug]);
+
+  useEffect(() => {
+    const container = contentRef.current;
+    if (!container) return;
+
+    const handleImageClick = (e) => {
+      const img = e.target.closest("img");
+      if (img) {
+        e.preventDefault();
+        setSelectedImage({ src: img.src, alt: img.alt || "" });
+      }
+    };
+
+    container.addEventListener("click", handleImageClick);
+    return () => container.removeEventListener("click", handleImageClick);
+  }, [post]);
 
   if (loading) {
     return (
@@ -88,6 +106,7 @@ const BlogPost = () => {
         )}
 
         <div
+          ref={contentRef}
           className="blog-post-content"
           dangerouslySetInnerHTML={{ __html }}
         />
@@ -99,6 +118,25 @@ const BlogPost = () => {
                 {tag}
               </span>
             ))}
+          </div>
+        )}
+
+        {selectedImage && (
+          <div className="blog-image-modal-overlay" onClick={() => setSelectedImage(null)}>
+            <div className="blog-image-modal-content" onClick={(e) => e.stopPropagation()}>
+              <img
+                src={selectedImage.src}
+                alt={selectedImage.alt}
+                className="blog-image-modal-img"
+              />
+              <button
+                className="blog-image-modal-close"
+                aria-label="Close"
+                onClick={() => setSelectedImage(null)}
+              >
+                <FaTimes size={20} />
+              </button>
+            </div>
           </div>
         )}
       </div>
