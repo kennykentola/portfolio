@@ -37,6 +37,19 @@ const BlogPost = () => {
     const container = contentRef.current;
     if (!container) return;
 
+    // Dynamically execute any embedded <script> tags inside blog post content
+    const scripts = container.querySelectorAll("script");
+    scripts.forEach((oldScript) => {
+      const newScript = document.createElement("script");
+      Array.from(oldScript.attributes).forEach((attr) => {
+        newScript.setAttribute(attr.name, attr.value);
+      });
+      if (oldScript.innerHTML) {
+        newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+      }
+      oldScript.parentNode.replaceChild(newScript, oldScript);
+    });
+
     const handleImageClick = (e) => {
       const img = e.target.closest("img");
       if (img) {
@@ -74,7 +87,9 @@ const BlogPost = () => {
     );
   }
 
-  const __html = marked(post.content);
+  // Support full HTML, CSS (<style>), JS (<script>), and Markdown
+  const isRawHtml = /<(style|script|div|header|section|main|footer|p|h[1-6]|span|table|form|article)/i.test(post.content || "");
+  const __html = isRawHtml ? post.content : marked(post.content || "");
 
   return (
     <article className="blog-post-section">

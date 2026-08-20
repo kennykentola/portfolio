@@ -613,7 +613,7 @@ const BlogForm = ({ API_BASE_URL, token, initial, onSave, onCancel }) => {
         <label>Cover Image URL<input name="coverImage" value={form.coverImage} onChange={handleChange} placeholder="https://..." /></label>
       </div>
       <label>Excerpt<input name="excerpt" value={form.excerpt} onChange={handleChange} placeholder="Short summary..." /></label>
-      <label>Content (Markdown supported) *<textarea name="content" value={form.content} onChange={handleChange} rows={6} required /></label>
+      <label>Content (HTML, CSS, JS & Markdown supported) *<textarea name="content" value={form.content} onChange={handleChange} rows={12} required /></label>
       <label>Tags (comma-separated)<input name="tags" value={form.tags} onChange={handleChange} placeholder="React, Node, CSS" /></label>
       <label className="checkbox-label">
         <input type="checkbox" name="published" checked={form.published} onChange={handleChange} />
